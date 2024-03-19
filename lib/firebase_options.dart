@@ -2,7 +2,7 @@
 // ignore_for_file: lines_longer_than_80_chars, avoid_classes_with_only_static_members
 import 'package:firebase_core/firebase_core.dart' show FirebaseOptions;
 import 'package:flutter/foundation.dart'
-    show defaultTargetPlatform, kIsWeb, TargetPlatform;
+  show defaultTargetPlatform, kIsWeb, TargetPlatform;
 
 /// Default [FirebaseOptions] for use with your Firebase apps.
 ///
@@ -17,15 +17,24 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-        return ios;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
@@ -43,39 +52,11 @@ class DefaultFirebaseOptions {
     }
   }
 
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBPZeCfSYmRXwtg1HC_HPCEIkxajZ8cdvw',
-    appId: '1:863335258309:web:a1d365b5eb7549a0f5f8ac',
-    messagingSenderId: '863335258309',
-    projectId: 'chatchat-1b9c4',
-    authDomain: 'chatchat-1b9c4.firebaseapp.com',
-    storageBucket: 'chatchat-1b9c4.appspot.com',
-    measurementId: 'G-S5HZLL1MQT',
-  );
-
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyDbkgKNp2Vbc-ve6KRH4TiIrTlAH6d-kbo',
     appId: '1:863335258309:android:e1bd5f8cc2235be2f5f8ac',
     messagingSenderId: '863335258309',
     projectId: 'chatchat-1b9c4',
     storageBucket: 'chatchat-1b9c4.appspot.com',
-  );
-
-  static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyAVjyyIgTSjlrLL2Q1MhDnWVIcZu67UbC4',
-    appId: '1:863335258309:ios:3578776f19faf4d7f5f8ac',
-    messagingSenderId: '863335258309',
-    projectId: 'chatchat-1b9c4',
-    storageBucket: 'chatchat-1b9c4.appspot.com',
-    iosBundleId: 'com.example.chat',
-  );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyAVjyyIgTSjlrLL2Q1MhDnWVIcZu67UbC4',
-    appId: '1:863335258309:ios:89365bff980d7ccef5f8ac',
-    messagingSenderId: '863335258309',
-    projectId: 'chatchat-1b9c4',
-    storageBucket: 'chatchat-1b9c4.appspot.com',
-    iosBundleId: 'com.example.chat.RunnerTests',
   );
 }
