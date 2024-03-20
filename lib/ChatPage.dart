@@ -4,6 +4,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+//絵文字のためにimportした
+import 'package:emoji_regex/emoji_regex.dart';
+
 import 'package:chat/main.dart';
 import 'package:chat/post.dart';
 import 'package:chat/my_page.dart';
@@ -98,10 +101,24 @@ class _ChatPageState extends State<ChatPage> {
 
                                   //  }
                                   // 新しいテキストを初期化
-    
+
+                                   ////////emoji　の認識（一応動いたっぽい）
+                                   // Use emojiRegex() to get the emoji regex pattern as a string
+                                   String emojiPattern = emojiRegex().pattern;
+                                   
+                                   // Define a regular expression using the emoji pattern
+                                   RegExp regex = RegExp(emojiPattern);
+
+                                   // Replace emojis with their names
+                                   String textWithNames = text.replaceAllMapped(regex, (match) {
+                                        return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
+                                   });
+                                   
 
                                    final newPost = Post(
-                                        text: newText,
+                                        // text: newText,
+                                        // text: text,
+                                        text: textWithNames,
                                         createdAt: Timestamp.now(), // 投稿日時は現在とします
                                         // createdAt: DateTime.now().millisecondsSinceEpoch,
                                         // createdAt: Timestamp.now(),
@@ -150,3 +167,4 @@ class _ChatPageState extends State<ChatPage> {
 //             newText += character;
 //         }
 //     }
+
