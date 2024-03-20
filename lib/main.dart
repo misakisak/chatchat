@@ -26,10 +26,24 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      theme: ThemeData(),
-      home: const SignInPage(),
-    );
+    // return MaterialApp(
+    //   theme: ThemeData(),
+    //   home: const SignInPage(),
+    // );
+    // currentUser が null であればログインしていません。
+    if (FirebaseAuth.instance.currentUser == null) {
+      // 未ログイン
+      return MaterialApp(
+        theme: ThemeData(),
+        home: const SignInPage(),
+      );
+    } else {
+      // ログイン中
+      return MaterialApp(
+        theme: ThemeData(),
+        home: const ChatPage(),
+      );
+    }
   }
 }
 
@@ -39,26 +53,6 @@ class SignInPage extends StatefulWidget {
   @override
   State<SignInPage> createState() => _SignInPageState();
 }
-// class ChatPage extends StatefulWidget {
-//      const ChatPage({super.key});
-
-//      @override
-//      State<ChatPage> createState() => _ChatPageState();
-// }
-
-// class _ChatPageState extends State<ChatPage> {
-//      @override
-//      Widget build(BuildContext context) {
-//           return Scaffold(
-//                appBar: AppBar(
-//                     title: const Text('チャット'),
-//                ),
-//                body: Center(
-//                     child: TextFormField(),
-//                ),
-//           );
-//      }
-// }
 
 class _SignInPageState extends State<SignInPage> {
   Future<void> signInWithGoogle() async {

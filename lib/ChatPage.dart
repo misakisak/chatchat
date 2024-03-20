@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'package:chat/main.dart';
 import 'package:chat/post.dart';
+import 'package:chat/my_page.dart';
 
 class ChatPage extends StatefulWidget {
      const ChatPage({super.key});
@@ -20,6 +21,26 @@ class _ChatPageState extends State<ChatPage> {
           return Scaffold(
                appBar: AppBar(
                     title: const Text('チャット'),
+                    // actions プロパティにWidgetを与えると右端に表示されます。
+                    actions: [
+                         // tap 可能にするために InkWell を使います。
+                         InkWell(
+                              onTap: () {
+                                   Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                             builder: (context) {
+                                                  return const MyPage();
+                                             },
+                                        ),
+                                   );
+                              },
+                              child: CircleAvatar(
+                                   backgroundImage: NetworkImage(
+                                        FirebaseAuth.instance.currentUser!.photoURL!,
+                                   ),
+                              ),
+                         )
+                    ],
                ),
                body: Column(
                     children: [
