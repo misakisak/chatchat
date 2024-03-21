@@ -4,13 +4,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-//絵文字のためにimportした
-import 'package:emoji_regex/emoji_regex.dart';
-
 import 'package:chat/main.dart';
 import 'package:chat/post.dart';
 import 'package:chat/my_page.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class ChatPage extends StatefulWidget {
      const ChatPage({super.key});
 
@@ -19,12 +16,11 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
-
      @override
      Widget build(BuildContext context) {
           return Scaffold(
                appBar: AppBar(
-                    title: const Text('チャット'),
+                    title: Text(AppLocalizations.of(context).title),
                     // actions プロパティにWidgetを与えると右端に表示されます。
                     actions: [
                          // tap 可能にするために InkWell を使います。
@@ -86,39 +82,8 @@ class _ChatPageState extends State<ChatPage> {
                                    // doc の引数を空にするとランダムなIDが採番されます
                                    final newDocumentReference = postsReference.doc();
 
-
-                                  //  String newText='';
-                                  //  for(int i=0;i<text.length;i++){
-                                    
-                                  //   if(isEmoji(text[i])){
-                                  //     print('絵文字です: $text[i]');
-                                  //     newText+='a';
-                                  //   }
-                                  //   else{
-                                  //     newText+=text[i];
-
-                                  //   }
-
-                                  //  }
-                                  // 新しいテキストを初期化
-
-                                   ////////emoji　の認識（一応動いたっぽい）
-                                   // Use emojiRegex() to get the emoji regex pattern as a string
-                                   String emojiPattern = emojiRegex().pattern;
-                                   
-                                   // Define a regular expression using the emoji pattern
-                                   RegExp regex = RegExp(emojiPattern);
-
-                                   // Replace emojis with their names
-                                   String textWithNames = text.replaceAllMapped(regex, (match) {
-                                        return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
-                                   });
-                                   
-
                                    final newPost = Post(
-                                        // text: newText,
-                                        // text: text,
-                                        text: textWithNames,
+                                        text: text,
                                         createdAt: Timestamp.now(), // 投稿日時は現在とします
                                         // createdAt: DateTime.now().millisecondsSinceEpoch,
                                         // createdAt: Timestamp.now(),
@@ -139,32 +104,3 @@ class _ChatPageState extends State<ChatPage> {
           );
      }
 }
-
-//   //その文字が絵文字かどうか
-//   bool isEmoji(String character) {
-//     RegExp emojiPattern = RegExp(
-//       r"[\u{1F600}-\u{1F64F}"
-//       r"\u{1F300}-\u{1F5FF}"
-//       r"\u{1F680}-\u{1F6FF}"
-//       r"\u{1F1E0}-\u{1F1FF}"
-//       r"\u{2600}-\u{26FF}"
-//       r"\u{2700}-\u{27BF}"
-//       r"]",
-//       unicode: true,
-//     );
-//     return emojiPattern.hasMatch(character);
-//    }
-//  String newText = '';
-//   // 一文字ずつ処理するためのforループ
-//     for (int i = 0; i < text.length; i++) {
-//         final character = text[i];
-//         // 文字が絵文字かどうかをチェックする
-//         if (isEmoji(character)) {
-//             // 絵文字の場合、代わりに文字 "a" を newText に追加
-//             newText += 'a';
-//         } else {
-//             // 絵文字でない場合、そのまま newText に追加
-//             newText += character;
-//         }
-//     }
-

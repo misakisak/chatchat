@@ -9,6 +9,7 @@ import 'package:chat/ChatPage.dart';
 ////postが見つからないエラーが出たから足しました
 import 'package:cloud_firestore/cloud_firestore.dart';
 ////FirebaseFirestoreが動かなくてpackageをimportしました
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 Future<void> main() async {
   // main 関数でも async が使えます
@@ -34,12 +35,16 @@ class MyApp extends StatelessWidget {
     if (FirebaseAuth.instance.currentUser == null) {
       // 未ログイン
       return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates, // 追加
+        supportedLocales: AppLocalizations.supportedLocales,             // 追加
         theme: ThemeData(),
         home: const SignInPage(),
       );
     } else {
       // ログイン中
       return MaterialApp(
+        localizationsDelegates: AppLocalizations.localizationsDelegates, // 追加
+      supportedLocales: AppLocalizations.supportedLocales,             // 追加
         theme: ThemeData(),
         home: const ChatPage(),
       );
