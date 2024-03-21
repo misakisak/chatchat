@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:intl/intl.dart'; 
 import 'package:chat/main.dart';
 
 class MyPage extends StatelessWidget {
@@ -62,6 +62,29 @@ class MyPage extends StatelessWidget {
                                         );
                                    },
                                    child: const Text('サインアウト'),
+                              ),
+                              const SizedBox(height: 16),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // 日本語を選択した場合の処理
+                                      Locale locale = Locale('ja', 'JP');
+                                      
+                                    },
+                                    child: const Text('日本語'),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // 英語を選択した場合の処理
+                                      Locale locale = Locale('en', 'US');
+                                      
+                                    },
+                                    child: const Text('English'),
+                                  ),
+                                ],
                               ),
                     ],
                ),
