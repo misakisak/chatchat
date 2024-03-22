@@ -20,7 +20,8 @@ import 'package:chat/my_page.dart';
 import 'package:http/http.dart' as http;
 //言語翻訳のため
 import 'dart:convert'; // JSONデータを解析するために必要
-
+// StatefulWidget使うため
+import 'package:flutter/src/widgets/framework.dart';
 
 
 class ChatPage extends StatefulWidget {
@@ -325,7 +326,7 @@ class _ChatPageState extends State<ChatPage> {
 //         }
 //     }
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends StatefulWidget {
   const PostWidget({
     Key? key,
     required this.post,
@@ -334,108 +335,257 @@ class PostWidget extends StatelessWidget {
   final Post post;
 
   @override
+  _PostWidgetState createState() => _PostWidgetState();
+}
+
+class _PostWidgetState extends State<PostWidget> {
+  bool showIcons = false;
+
+  @override
   Widget build(BuildContext context) {
     // return Text(post.text);
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          CircleAvatar(
-            backgroundImage: NetworkImage(
-              post.posterImageUrl,
-            ),
-          ),
+    if (FirebaseAuth.instance.currentUser!.uid == widget.post.posterId) {
+    
+      return InkWell(
+        onTap: () {
+          // Toggle the visibility of the icons
+          setState(() {
+            showIcons = !showIcons;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-          const SizedBox(width: 8),
-
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      post.posterName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                    Row( //posterName & date
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        // Text(
+                        //   widget.post.posterName,
+                        //   style: const TextStyle(
+                        //     fontWeight: FontWeight.bold,
+                        //     fontSize: 12,
+                        //   ),
+                        // ),
+                        const SizedBox(width: 8),
+                        Text(
+                          // toDate() で Timestamp から DateTime に変換できます。
+                          DateFormat('MM/dd HH:mm').format(widget.post.createdAt.toDate()),
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ), //Row
+                    
+                    // Text(post.text),
+                    //投稿に背景色をつける
+                    Align( //post
+                      alignment: Alignment.centerRight,
+                      child: Container( //post
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          // 角丸にするにはこれを追加します。
+                          // 4 の数字を大きくするともっと丸くなります。
+                          borderRadius: BorderRadius.circular(4),
+                          // 色はここで変えられます
+                          // // [100] この数字を小さくすると色が薄くなります。
+                          // color: Colors.blue[100],
+                          //上のcolorを下の三項演算子で自分の投稿だけ色を変えるようにされている
+                          // [条件式] ? A : B の三項演算子を使っています。
+                          color: FirebaseAuth.instance.currentUser!.uid == widget.post.posterId ? Colors.amber[100] : Colors.blue[100],
+                        ),
+                        child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
+                        widget.post.textJa    : 
+                        widget.post.textEn,),  
                       ),
                     ),
-                    Text(
-                      // toDate() で Timestamp から DateTime に変換できます。
-                      DateFormat('MM/dd HH:mm').format(post.createdAt.toDate()),
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                  ],
-                ), //Row
-                
-                // Text(post.text),
-                //投稿に背景色をつける
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    // 角丸にするにはこれを追加します。
-                    // 4 の数字を大きくするともっと丸くなります。
-                    borderRadius: BorderRadius.circular(4),
-                    // 色はここで変えられます
-                    // // [100] この数字を小さくすると色が薄くなります。
-                    // color: Colors.blue[100],
-                    //上のcolorを下の三項演算子で自分の投稿だけ色を変えるようにされている
-                    // [条件式] ? A : B の三項演算子を使っています。
-                    color: FirebaseAuth.instance.currentUser!.uid == post.posterId ? Colors.amber[100] : Colors.blue[100],
-                  ),
-                  child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
-                  post.textJa    : 
-                  post.textEn,),  
-                ),
-                
-                if (FirebaseAuth.instance.currentUser!.uid == post.posterId)
-                  Row(
-                    children: [
-                      /// 編集ボタン
-                      IconButton(
-                        onPressed: () {
-                          //　ダイアログを表示する場合は `showDialog` 関数を実行します。
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                // content: Text('ダイアログ'),
-                                content: TextFormField(
-                                  initialValue: post.text,
-                                  autofocus: true,
-                                  //ダイアログを開いたタイミングですぐにキーボードが開かれてほしいです。
-                                  //これを実現するには autofocus プロパティに true を与えましょう。
-                                  onFieldSubmitted: (newText) {
-                                    post.reference.update({'text': newText});
-                                    //update したらダイアログを閉じよう
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
+                    
+                    if (showIcons)
+                      Row(
+                        children: [
+                          /// 編集ボタン
+                          IconButton( //edit
+                            onPressed: () {
+                              //　ダイアログを表示する場合は `showDialog` 関数を実行します。
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    // content: Text('ダイアログ'),
+                                    content: TextFormField(
+                                      initialValue: widget.post.text,
+                                      autofocus: true,
+                                      //ダイアログを開いたタイミングですぐにキーボードが開かれてほしいです。
+                                      //これを実現するには autofocus プロパティに true を与えましょう。
+                                      onFieldSubmitted: (newText) {
+                                        widget.post.reference.update({'text': newText});
+                                        //update したらダイアログを閉じよう
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                        icon: const Icon(Icons.edit),
-                      ),
+                            icon: const Icon(
+                              Icons.edit,
+                              size: 15,
+                            ),
+                          ),
 
-                      /// 削除ボタン
-                      IconButton(
-                        onPressed: () {
-                          // 削除は reference に対して delete() を呼ぶだけでよい。
-                          post.reference.delete();
-                        },
-                        icon: const Icon(Icons.delete),
+                          /// 削除ボタン
+                          IconButton( //delete
+                            onPressed: () {
+                              // 削除は reference に対して delete() を呼ぶだけでよい。
+                              widget.post.reference.delete();
+                            },
+                            icon: const Icon(
+                              Icons.delete,
+                              size: 15,
+                            ),
+                          ),
+                          IconButton( //元の文を表示する
+                            onPressed: () {
+                              //　ダイアログを表示する場合は `showDialog` 関数を実行します。
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('元のテキスト'), // Add the additional text
+                                        SizedBox(height: 8), // Add some space between the texts
+                                        Text(widget.post.text), // Display the original text
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.read_more,
+                              size: 15,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-              ],
-            ), //child
-          ), //expanded
-        ], //children
-      ), //Row
-    ); //Padding
+                  ],
+                ), //child
+              ), //expanded
+              const SizedBox(width: 8),
+            ], //children
+          ), //Row
+        ), //Padding
+      );
+    } else {
+      return InkWell(
+        onTap: () {
+          // Toggle the visibility of the icons
+          setState(() {
+            showIcons = !showIcons;
+          });
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage(
+                  widget.post.posterImageUrl,
+                ),
+              ),
+
+              const SizedBox(width: 8),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                  children: [
+                    Row( //posterName & date
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.post.posterName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 12,
+                          ),
+                        ),
+                        Text(
+                          // toDate() で Timestamp から DateTime に変換できます。
+                          DateFormat('MM/dd HH:mm').format(widget.post.createdAt.toDate()),
+                          style: const TextStyle(fontSize: 10),
+                        ),
+                      ],
+                    ), //Row
+                    
+                    // Text(post.text),
+                    //投稿に背景色をつける
+                    Container( //post
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        // 角丸にするにはこれを追加します。
+                        // 4 の数字を大きくするともっと丸くなります。
+                        borderRadius: BorderRadius.circular(4),
+                        // 色はここで変えられます
+                        // // [100] この数字を小さくすると色が薄くなります。
+                        // color: Colors.blue[100],
+                        //上のcolorを下の三項演算子で自分の投稿だけ色を変えるようにされている
+                        // [条件式] ? A : B の三項演算子を使っています。
+                        color: FirebaseAuth.instance.currentUser!.uid == widget.post.posterId ? Colors.amber[100] : Colors.blue[100],
+                      ),
+                      child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
+                      widget.post.textJa    : 
+                      widget.post.textEn,),  
+                    ),
+                    if (showIcons)
+                      Row( //icon buttons
+                        // mainAxisSize: MainAxisSize.min, // Set to MainAxisSize.min to make the Row occupy minimum space
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton( //元の文を表示する
+                            onPressed: () {
+                              //　ダイアログを表示する場合は `showDialog` 関数を実行します。
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text('元のテキスト'), // Add the additional text
+                                        SizedBox(height: 8), // Add some space between the texts
+                                        Text(widget.post.text), // Display the original text
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.read_more,
+                              size: 15,
+                            ),
+                          ),
+                        ]
+                      ), //row
+                    //if showIcon
+                  ],
+                ), //child
+              ), //expanded
+            ], //children
+          ), //Row
+        ), //Padding
+      );
+
+    }
   }
 }
