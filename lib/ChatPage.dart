@@ -139,8 +139,8 @@ class _ChatPageState extends State<ChatPage> {
     // });
     String textWithNamesAndMeanings = await replaceEmojisWithMeanings(text, regex);
     
-    String textEn = text;
-    String textJa = text;
+    String textEn = textWithNamesAndMeanings;
+    String textJa = textWithNamesAndMeanings;
     if(posterLocale=="en_US"){
       textJa = await translateText(textJa, 'ja');
       String decodedText = utf8.decode(textJa.runes.toList());
