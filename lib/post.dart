@@ -5,10 +5,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Post {
      Post({
           required this.text,
+          required this.textEn,
+          required this.textJa,
           required this.createdAt,
           required this.posterName,
           required this.posterImageUrl,
           required this.posterId,
+          required this.posterLocale,
           required this.reference,
      });
 
@@ -19,10 +22,13 @@ class Post {
           // map データが得られているのでここからはいつもと同じです。
           return Post(
                text: map['text'],
+               textEn: map['textEn'] ?? map['text'],
+               textJa: map['textJa'] ?? map['text'],
                createdAt: map['createdAt'],
                posterName: map['posterName'],
                posterImageUrl: map['posterImageUrl'],
                posterId: map['posterId'],
+               posterLocale: map['posterLocale'] ?? "en",
                reference: snapshot.reference, // 注意。reference は map ではなく snapshot に入っています。
           );
      }
@@ -30,16 +36,25 @@ class Post {
      Map<String, dynamic> toMap() {
           return {
                'text': text,
+               'textEn': textEn,
+               'textJa': textJa,
                'createdAt': createdAt,
                'posterName': posterName,
                'posterImageUrl': posterImageUrl,
                'posterId': posterId,
+               'posterLocale': posterLocale,
                // 'reference': reference, reference は field に含めなくてよい
                // field に含めなくても DocumentSnapshot に reference が存在するため
           };
      }
      /// 投稿文
      final String text;
+
+     /// 投稿文英語
+     final String textEn;
+
+     /// 投稿文日本語
+     final String textJa;
 
      /// 投稿日時
      final Timestamp createdAt;
@@ -52,6 +67,9 @@ class Post {
 
      /// 投稿者のユーザーID
      final String posterId;
+
+     /// 投稿者の設定言語
+     final String posterLocale;
 
      /// Firestoreのどこにデータが存在するかを表すpath情報
      final DocumentReference reference;
