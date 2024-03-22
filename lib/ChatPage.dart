@@ -17,6 +17,11 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:chat/main.dart';
 import 'package:chat/post.dart';
 import 'package:chat/my_page.dart';
+import 'package:http/http.dart' as http;
+//言語翻訳のため
+import 'dart:convert'; // JSONデータを解析するために必要
+
+
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -63,6 +68,37 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Future<void> sendPost(String text) async {
+    Future<String> translateText(String text, String targetLang) async {
+  // DeepL APIのエンドポイント
+  final apiUrl = 'https://api-free.deepl.com/v2/translate';
+
+  // DeepL APIキー
+  final apiKey = 'a3e6e60c-2fca-4dbb-a60f-ffd776d09293:fx';
+
+  // HTTP POSTリクエストのヘッダーとボディを設定
+  final response = await http.post(
+    Uri.parse(apiUrl),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded',
+      'Authorization': 'DeepL-Auth-Key $apiKey',
+    },
+    body: {
+      'text': text,
+      'target_lang': targetLang,
+    },
+  );
+
+  if (response.statusCode == 200) {
+    final responseData = jsonDecode(response.body);
+    if (responseData['translations'] != null && responseData['translations'].isNotEmpty) {
+      return responseData['translations'][0]['text'];
+    } else {
+      throw Exception('Translation not found in response data');
+    }
+  } else {
+    throw Exception('Failed to translate text: ${response.statusCode}');
+  }
+}
     // まずは user という変数にログイン中のユーザーデータを格納します
     final user = FirebaseAuth.instance.currentUser!;
 
@@ -102,6 +138,18 @@ class _ChatPageState extends State<ChatPage> {
     //   return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
     // });
     String textWithNamesAndMeanings = await replaceEmojisWithMeanings(text, regex);
+    
+    String textEn = text;
+    String textJa = text;
+    if(posterLocale=="en_US"){
+      textJa = await translateText(textJa, 'ja');
+      String decodedText = utf8.decode(textJa.runes.toList());
+      textJa = decodedText;
+      //utf-8にエンコードしなければならなそう
+    }
+    else{
+      textEn = await translateText(textEn, 'en');
+    }
 
     ////////////////
 
@@ -109,8 +157,8 @@ class _ChatPageState extends State<ChatPage> {
       // text: newText,
       // text: text,
       text: textWithNamesAndMeanings,
-      textEn: textWithNamesAndMeanings, //とりあえず
-      textJa: textWithNamesAndMeanings, //同様とりあえず
+      textEn: textEn, 
+      textJa: textJa, 
       createdAt: Timestamp.now(), // 投稿日時は現在とします
       posterName: posterName,
       posterImageUrl: posterImageUrl,
