@@ -197,6 +197,7 @@ class _ChatPageState extends State<ChatPage> {
       },
     
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           title: Text(AppLocalizations.of(context).title),
           // actions プロパティにWidgetを与えると右端に表示されます。
@@ -257,7 +258,12 @@ class _ChatPageState extends State<ChatPage> {
             // ),
 
             Padding(
-              padding: const EdgeInsets.all(8),
+              padding: const EdgeInsets.only(
+                left: 10.0,   // Left padding
+                top: 10.0,    // Top padding
+                right: 10.0,  // Right padding
+                bottom: 30.0, // Bottom padding
+              ),
               child: TextFormField(
                 // 上で作ったコントローラー（入力フィールドの文字を消すやつ）を与えます。
                 controller: controller,
@@ -266,18 +272,18 @@ class _ChatPageState extends State<ChatPage> {
                   // 未選択時の枠線
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.amber),
+                    borderSide: const BorderSide(color: Colors.grey),
                   ),
                   // 選択時の枠線
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: const BorderSide(
-                      color: Colors.amber,
-                      width: 2,
+                      color: Colors.grey,
+                      width: 1,
                     ),
                   ),
                   // 中を塗りつぶす色
-                  fillColor: Colors.amber[50],
+                  fillColor: Colors.white,
                   // 中を塗りつぶすかどうか
                   filled: true,
                 ),
@@ -354,7 +360,7 @@ class _PostWidgetState extends State<PostWidget> {
           });
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(3.0),
           child: Row(
             children: [
               Expanded(
@@ -390,22 +396,38 @@ class _PostWidgetState extends State<PostWidget> {
                         decoration: BoxDecoration(
                           // 角丸にするにはこれを追加します。
                           // 4 の数字を大きくするともっと丸くなります。
-                          borderRadius: BorderRadius.circular(4),
+                          borderRadius: BorderRadius.circular(6),
                           // 色はここで変えられます
                           // // [100] この数字を小さくすると色が薄くなります。
                           // color: Colors.blue[100],
                           //上のcolorを下の三項演算子で自分の投稿だけ色を変えるようにされている
                           // [条件式] ? A : B の三項演算子を使っています。
-                          color: FirebaseAuth.instance.currentUser!.uid == widget.post.posterId ? Colors.amber[100] : Colors.blue[100],
+                          color: Colors.blue[900],
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2), // Shadow color
+                              spreadRadius: 3, // Spread radius
+                              blurRadius: 5, // Blur radius
+                              offset: Offset(0, 3), // Offset in x and y directions
+                            ),
+                          ],
                         ),
-                        child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
-                        widget.post.textJa    : 
-                        widget.post.textEn,),  
+                        child: Text(
+                          Localizations.localeOf(context).languageCode == 'ja' ? 
+                            widget.post.textJa    : 
+                            widget.post.textEn,
+                          style: TextStyle(
+                            fontSize: 13,
+                            color: Colors.white,
+                          ),
+                        ),  
+
                       ),
                     ),
                     
                     if (showIcons)
                       Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
                           /// 編集ボタン
                           IconButton( //edit
@@ -478,7 +500,7 @@ class _PostWidgetState extends State<PostWidget> {
                   ],
                 ), //child
               ), //expanded
-              const SizedBox(width: 8),
+              const SizedBox(width: 5),
             ], //children
           ), //Row
         ), //Padding
@@ -492,7 +514,7 @@ class _PostWidgetState extends State<PostWidget> {
           });
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(3.0),
           child: Row(
             children: [
               CircleAvatar(
@@ -525,7 +547,7 @@ class _PostWidgetState extends State<PostWidget> {
                         ),
                       ],
                     ), //Row
-                    
+                    // const SizedBox(width: 20),
                     // Text(post.text),
                     //投稿に背景色をつける
                     Container( //post
@@ -533,17 +555,32 @@ class _PostWidgetState extends State<PostWidget> {
                       decoration: BoxDecoration(
                         // 角丸にするにはこれを追加します。
                         // 4 の数字を大きくするともっと丸くなります。
-                        borderRadius: BorderRadius.circular(4),
+                        borderRadius: BorderRadius.circular(6),
                         // 色はここで変えられます
                         // // [100] この数字を小さくすると色が薄くなります。
                         // color: Colors.blue[100],
                         //上のcolorを下の三項演算子で自分の投稿だけ色を変えるようにされている
                         // [条件式] ? A : B の三項演算子を使っています。
-                        color: FirebaseAuth.instance.currentUser!.uid == widget.post.posterId ? Colors.amber[100] : Colors.blue[100],
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.2), // Shadow color
+                            spreadRadius: 3, // Spread radius
+                            blurRadius: 5, // Blur radius
+                            offset: Offset(0, 3), // Offset in x and y directions
+                          ),
+                        ],
                       ),
-                      child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
-                      widget.post.textJa    : 
-                      widget.post.textEn,),  
+                      child: Text(
+                        Localizations.localeOf(context).languageCode == 'ja' ? 
+                          widget.post.textJa    : 
+                          widget.post.textEn,
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.black,
+                        ),
+                      
+                      ),  
                     ),
                     if (showIcons)
                       Row( //icon buttons
