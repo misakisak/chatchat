@@ -22,6 +22,82 @@ import 'package:http/http.dart' as http;
 import 'dart:convert'; // JSONデータを解析するために必要
 // StatefulWidget使うため
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:chat/Utils.dart';
+
+// class Utils {
+//   Future<Map<String, String>> fetchEmojiMeaningsFromFirestore() async {
+//     // Initialize Firestore
+//     FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+//     // Fetch emoji meanings from Firestore collection
+//     QuerySnapshot snapshot = await firestore.collection('emojis').get();
+    
+//     // Convert snapshot to a Map of emoji -> meaning
+//     Map<String, String> emojiMeanings = {};
+//     snapshot.docs.forEach((doc) {
+//       String emoji = doc.get('id'); // Emoji character itself
+//       String meaning = doc.get('meanEn') ?? "Unknown"; // English meaning
+//       emojiMeanings[emoji] = meaning;
+//     });
+
+//     return emojiMeanings;
+//   }
+
+//   static Future<String> replaceEmojisWithMeanings(String text, RegExp regex) async {
+//     // Implementation...
+//     // Future<String> replaceEmojisWithMeanings(String text, RegExp regex) async {
+//       // Initialize Firestore
+//       FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+//       // Fetch emoji meanings from Firestore
+//       Map<String, String> emojiMeanings = await fetchEmojiMeaningsFromFirestore();
+
+//       // Replace emojis with their names and meanings
+//       String textWithNamesAndMeanings = text.replaceAllMapped(regex, (match) {
+//         String emoji = match.group(0)!;
+//         String meaning = emojiMeanings[emoji] ?? "Unknown";
+//         return "$emoji ($meaning)";
+//       });
+
+//       return textWithNamesAndMeanings;
+//     // }
+//   }
+
+//   static Future<String> translateText(String text, String targetLang) async {
+//     // Implementation...
+//     // Future<String> translateText(String text, String targetLang) async {
+//       // DeepL APIのエンドポイント
+//       final apiUrl = 'https://api-free.deepl.com/v2/translate';
+
+//       // DeepL APIキー
+//       final apiKey = 'a3e6e60c-2fca-4dbb-a60f-ffd776d09293:fx';
+
+//       // HTTP POSTリクエストのヘッダーとボディを設定
+//       final response = await http.post(
+//         Uri.parse(apiUrl),
+//         headers: {
+//           'Content-Type': 'application/x-www-form-urlencoded',
+//           'Authorization': 'DeepL-Auth-Key $apiKey',
+//         },
+//         body: {
+//           'text': text,
+//           'target_lang': targetLang,
+//         },
+//       );
+
+//       if (response.statusCode == 200) {
+//         final responseData = jsonDecode(response.body);
+//         if (responseData['translations'] != null && responseData['translations'].isNotEmpty) {
+//           return responseData['translations'][0]['text'];
+//         } else {
+//           throw Exception('Translation not found in response data');
+//         }
+//       } else {
+//         throw Exception('Failed to translate text: ${response.statusCode}');
+//       }
+//     }
+//   // }
+// }
 
 
 class ChatPage extends StatefulWidget {
@@ -33,73 +109,73 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
 
-  Future<String> replaceEmojisWithMeanings(String text, RegExp regex) async {
-    // Initialize Firestore
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // Future<String> replaceEmojisWithMeanings(String text, RegExp regex) async {
+  //   // Initialize Firestore
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    // Fetch emoji meanings from Firestore
-    Map<String, String> emojiMeanings = await fetchEmojiMeaningsFromFirestore();
+  //   // Fetch emoji meanings from Firestore
+  //   Map<String, String> emojiMeanings = await fetchEmojiMeaningsFromFirestore();
 
-    // Replace emojis with their names and meanings
-    String textWithNamesAndMeanings = text.replaceAllMapped(regex, (match) {
-      String emoji = match.group(0)!;
-      String meaning = emojiMeanings[emoji] ?? "Unknown";
-      return "$emoji ($meaning)";
-    });
+  //   // Replace emojis with their names and meanings
+  //   String textWithNamesAndMeanings = text.replaceAllMapped(regex, (match) {
+  //     String emoji = match.group(0)!;
+  //     String meaning = emojiMeanings[emoji] ?? "Unknown";
+  //     return "$emoji ($meaning)";
+  //   });
 
-    return textWithNamesAndMeanings;
-  }
+  //   return textWithNamesAndMeanings;
+  // }
 
-  Future<Map<String, String>> fetchEmojiMeaningsFromFirestore() async {
-    // Initialize Firestore
-    FirebaseFirestore firestore = FirebaseFirestore.instance;
+  // Future<Map<String, String>> fetchEmojiMeaningsFromFirestore() async {
+  //   // Initialize Firestore
+  //   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-    // Fetch emoji meanings from Firestore collection
-    QuerySnapshot snapshot = await firestore.collection('emojis').get();
+  //   // Fetch emoji meanings from Firestore collection
+  //   QuerySnapshot snapshot = await firestore.collection('emojis').get();
     
-    // Convert snapshot to a Map of emoji -> meaning
-    Map<String, String> emojiMeanings = {};
-    snapshot.docs.forEach((doc) {
-      String emoji = doc.get('id'); // Emoji character itself
-      String meaning = doc.get('meanEn') ?? "Unknown"; // English meaning
-      emojiMeanings[emoji] = meaning;
-    });
+  //   // Convert snapshot to a Map of emoji -> meaning
+  //   Map<String, String> emojiMeanings = {};
+  //   snapshot.docs.forEach((doc) {
+  //     String emoji = doc.get('id'); // Emoji character itself
+  //     String meaning = doc.get('meanEn') ?? "Unknown"; // English meaning
+  //     emojiMeanings[emoji] = meaning;
+  //   });
 
-    return emojiMeanings;
-  }
+  //   return emojiMeanings;
+  // }
 
   Future<void> sendPost(String text) async {
-    Future<String> translateText(String text, String targetLang) async {
-  // DeepL APIのエンドポイント
-  final apiUrl = 'https://api-free.deepl.com/v2/translate';
+    // Future<String> translateText(String text, String targetLang) async {
+    //   // DeepL APIのエンドポイント
+    //   final apiUrl = 'https://api-free.deepl.com/v2/translate';
 
-  // DeepL APIキー
-  final apiKey = 'a3e6e60c-2fca-4dbb-a60f-ffd776d09293:fx';
+    //   // DeepL APIキー
+    //   final apiKey = 'a3e6e60c-2fca-4dbb-a60f-ffd776d09293:fx';
 
-  // HTTP POSTリクエストのヘッダーとボディを設定
-  final response = await http.post(
-    Uri.parse(apiUrl),
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': 'DeepL-Auth-Key $apiKey',
-    },
-    body: {
-      'text': text,
-      'target_lang': targetLang,
-    },
-  );
+    //   // HTTP POSTリクエストのヘッダーとボディを設定
+    //   final response = await http.post(
+    //     Uri.parse(apiUrl),
+    //     headers: {
+    //       'Content-Type': 'application/x-www-form-urlencoded',
+    //       'Authorization': 'DeepL-Auth-Key $apiKey',
+    //     },
+    //     body: {
+    //       'text': text,
+    //       'target_lang': targetLang,
+    //     },
+    //   );
 
-  if (response.statusCode == 200) {
-    final responseData = jsonDecode(response.body);
-    if (responseData['translations'] != null && responseData['translations'].isNotEmpty) {
-      return responseData['translations'][0]['text'];
-    } else {
-      throw Exception('Translation not found in response data');
-    }
-  } else {
-    throw Exception('Failed to translate text: ${response.statusCode}');
-  }
-}
+    //   if (response.statusCode == 200) {
+    //     final responseData = jsonDecode(response.body);
+    //     if (responseData['translations'] != null && responseData['translations'].isNotEmpty) {
+    //       return responseData['translations'][0]['text'];
+    //     } else {
+    //       throw Exception('Translation not found in response data');
+    //     }
+    //   } else {
+    //     throw Exception('Failed to translate text: ${response.statusCode}');
+    //   }
+    // }
     // まずは user という変数にログイン中のユーザーデータを格納します
     final user = FirebaseAuth.instance.currentUser!;
 
@@ -138,18 +214,18 @@ class _ChatPageState extends State<ChatPage> {
     // String textWithNames = text.replaceAllMapped(regex, (match) {
     //   return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
     // });
-    String textWithNamesAndMeanings = await replaceEmojisWithMeanings(text, regex);
+    String textWithNamesAndMeanings = await Utils.replaceEmojisWithMeanings(text, regex);
     
     String textEn = textWithNamesAndMeanings;
     String textJa = textWithNamesAndMeanings;
     if(posterLocale=="en_US"){
-      textJa = await translateText(textJa, 'ja');
+      textJa = await Utils.translateText(textJa, 'ja');
       String decodedText = utf8.decode(textJa.runes.toList());
       textJa = decodedText;
       //utf-8にエンコードしなければならなそう
     }
     else{
-      textEn = await translateText(textEn, 'en');
+      textEn = await Utils.translateText(textEn, 'en');
     }
 
     ////////////////
@@ -270,20 +346,21 @@ class _ChatPageState extends State<ChatPage> {
 
                 decoration: InputDecoration(
                   // 未選択時の枠線
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(color: Colors.grey),
-                  ),
-                  // 選択時の枠線
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: const BorderSide(
-                      color: Colors.grey,
-                      width: 1,
-                    ),
-                  ),
+                  // enabledBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   borderSide: const BorderSide(color: Colors.grey),
+                  // ),
+                  // // 選択時の枠線
+                  // focusedBorder: OutlineInputBorder(
+                  //   borderRadius: BorderRadius.circular(8),
+                  //   borderSide: const BorderSide(
+                  //     color: Colors.grey,
+                  //     width: 1,
+                  //   ),
+                  // ),
                   // 中を塗りつぶす色
-                  fillColor: Colors.white,
+                  // fillColor: Colors.white,
+                  fillColor: Color.fromRGBO(242, 239, 237, 1.0),
                   // 中を塗りつぶすかどうか
                   filled: true,
                 ),
@@ -346,7 +423,6 @@ class PostWidget extends StatefulWidget {
 
 class _PostWidgetState extends State<PostWidget> {
   bool showIcons = false;
-
   @override
   Widget build(BuildContext context) {
     // return Text(post.text);
@@ -371,13 +447,6 @@ class _PostWidgetState extends State<PostWidget> {
                     Row( //posterName & date
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        // Text(
-                        //   widget.post.posterName,
-                        //   style: const TextStyle(
-                        //     fontWeight: FontWeight.bold,
-                        //     fontSize: 12,
-                        //   ),
-                        // ),
                         const SizedBox(width: 8),
                         Text(
                           // toDate() で Timestamp から DateTime に変換できます。
@@ -385,9 +454,7 @@ class _PostWidgetState extends State<PostWidget> {
                           style: const TextStyle(fontSize: 10),
                         ),
                       ],
-                    ), //Row
-                    
-                    // Text(post.text),
+                    ), //Row                   
                     //投稿に背景色をつける
                     Align( //post
                       alignment: Alignment.centerRight,
@@ -443,7 +510,25 @@ class _PostWidgetState extends State<PostWidget> {
                                       autofocus: true,
                                       //ダイアログを開いたタイミングですぐにキーボードが開かれてほしいです。
                                       //これを実現するには autofocus プロパティに true を与えましょう。
-                                      onFieldSubmitted: (newText) {
+                                      onFieldSubmitted: (newText) async {
+                                        String emojiPattern = emojiRegex().pattern;
+                                        // Define a regular expression using the emoji pattern
+                                        RegExp regex = RegExp(emojiPattern);
+                                        String textWithNamesAndMeanings =  await Utils.replaceEmojisWithMeanings(newText, regex);
+    
+                                        String textEn = textWithNamesAndMeanings;
+                                        String textJa = textWithNamesAndMeanings;
+                                        if(widget.post.posterLocale == "en_US"){
+                                          textJa = await Utils.translateText(textJa, 'ja');
+                                          String decodedText = utf8.decode(textJa.runes.toList());
+                                          textJa = decodedText;
+                                          //utf-8にエンコードしなければならなそう
+                                        }
+                                        else{
+                                          textEn = await Utils.translateText(textEn, 'en');
+                                        }
+                                        widget.post.reference.update({'textJa': textJa});
+                                        widget.post.reference.update({'textEn': textEn});
                                         widget.post.reference.update({'text': newText});
                                         //update したらダイアログを閉じよう
                                         Navigator.of(context).pop();
@@ -547,8 +632,6 @@ class _PostWidgetState extends State<PostWidget> {
                         ),
                       ],
                     ), //Row
-                    // const SizedBox(width: 20),
-                    // Text(post.text),
                     //投稿に背景色をつける
                     Container( //post
                       padding: const EdgeInsets.all(8),
