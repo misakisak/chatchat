@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:chat/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -32,7 +34,7 @@ class _ChatPageState extends State<ChatPage> {
     final posterId = user.uid; // ログイン中のユーザーのIDがとれます
     final posterName = user.displayName!; // Googleアカウントの名前がとれます
     final posterImageUrl = user.photoURL!; // Googleアカウントのアイコンデータがとれます
-
+    final posterLocale = window.locale.toString(); // ユーザーのデバイスの設定言語（ロケール）を取得します
     // 先ほど作った postsReference からランダムなIDのドキュメントリファレンスを作成します
     // doc の引数を空にするとランダムなIDが採番されます
     final newDocumentReference = postsReference.doc();
@@ -70,10 +72,13 @@ class _ChatPageState extends State<ChatPage> {
       // text: newText,
       // text: text,
       text: textWithNames,
+      textEn: textWithNames, //とりあえず
+      textJa: textWithNames, //同様とりあえず
       createdAt: Timestamp.now(), // 投稿日時は現在とします
       posterName: posterName,
       posterImageUrl: posterImageUrl,
       posterId: posterId,
+      posterLocale: posterLocale,
       reference: newDocumentReference,
     );
 

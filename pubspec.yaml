@@ -44,6 +44,7 @@ dependencies:
   emoji_regex: ^0.0.5
   shared_preferences: ^2.1.2
   intl: ^0.18.1 #言語対応ではこっち
+  http: ^1.2.1
   #intl: ^0.19.0
 
 
