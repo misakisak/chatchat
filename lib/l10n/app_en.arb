@@ -2,5 +2,10 @@
     "@@locale":"en",
     "title":"chatchat",
     "ratethisapp": "Rate this app",
-    "privacypolicy": "Privacy Policy"
+    "privacypolicy": "Privacy Policy",
+    "mypage": "My Page",
+    "signout": "Sign Out",
+    "signin": "Sign In",
+    "userid": "User ID",
+    "registrationdate": "Registration Date"
   }

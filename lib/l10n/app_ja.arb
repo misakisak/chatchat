@@ -2,7 +2,12 @@
     "@@locale":"ja",
     "title":"チャットチャット",
     "ratethisapp": "このアプリをレビューする",
-    "privacypolicy": "プライバシーポリシー"
+    "privacypolicy": "プライバシーポリシー",
+    "mypage":  "マイページ",
+    "signout": "サインアウト",
+    "signin": "サインイン",
+    "userid": "ユーザーID",
+    "registrationdate": "登録日"
   }
   
   

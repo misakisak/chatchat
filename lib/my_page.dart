@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intl/intl.dart'; 
 import 'package:chat/main.dart';
-
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class MyPage extends StatelessWidget {
      const MyPage({super.key});
 
@@ -13,7 +13,7 @@ class MyPage extends StatelessWidget {
      // そこで適当な変数名をつけた変数に一時的に値を格納して記述量を短くする場合があります。
      final user = FirebaseAuth.instance.currentUser!;
      return Scaffold(
-          appBar: AppBar(title: const Text('マイページ')),
+          appBar: AppBar(title: Text(AppLocalizations.of(context).mypage)),
           body: Container(
                alignment: Alignment.center,
                padding: const EdgeInsets.all(32),
@@ -38,12 +38,12 @@ class MyPage extends StatelessWidget {
                          Align(
                               alignment: Alignment.centerLeft,
                               // ユーザー ID
-                              child: Text('ユーザーID：${user.uid}'),
+                              child: Text('${AppLocalizations.of(context).userid}：${user.uid}'),
                          ),
                          Align(
                               alignment: Alignment.centerLeft,
                               // 登録日
-                              child: Text('登録日：${user.metadata.creationTime!}'),
+                              child: Text('${AppLocalizations.of(context).registrationdate}：${user.metadata.creationTime!}'),
                          ),
                          const SizedBox(height: 16),
                               ElevatedButton(
@@ -61,31 +61,31 @@ class MyPage extends StatelessWidget {
                                              (route) => false,
                                         );
                                    },
-                                   child: const Text('サインアウト'),
+                                   child: Text(AppLocalizations.of(context).signout),
                               ),
-                              const SizedBox(height: 16),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // 日本語を選択した場合の処理
-                                      Locale locale = Locale('ja', 'JP');
+                              // const SizedBox(height: 16),
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.center,
+                              //   children: [
+                              //     ElevatedButton(
+                              //       onPressed: () {
+                              //         // 日本語を選択した場合の処理
+                              //         Locale locale = Locale('ja', 'JP');
                                       
-                                    },
-                                    child: const Text('日本語'),
-                                  ),
-                                  const SizedBox(width: 16),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // 英語を選択した場合の処理
-                                      Locale locale = Locale('en', 'US');
+                              //       },
+                              //       child: const Text('日本語'),
+                              //     ),
+                              //     const SizedBox(width: 16),
+                              //     ElevatedButton(
+                              //       onPressed: () {
+                              //         // 英語を選択した場合の処理
+                              //         Locale locale = Locale('en', 'US');
                                       
-                                    },
-                                    child: const Text('English'),
-                                  ),
-                                ],
-                              ),
+                              //       },
+                              //       child: const Text('English'),
+                              //     ),
+                              //   ],
+                              // ),
                     ],
                ),
           ),
