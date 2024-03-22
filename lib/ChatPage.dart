@@ -27,6 +27,41 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
 
+  Future<String> replaceEmojisWithMeanings(String text, RegExp regex) async {
+    // Initialize Firestore
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Fetch emoji meanings from Firestore
+    Map<String, String> emojiMeanings = await fetchEmojiMeaningsFromFirestore();
+
+    // Replace emojis with their names and meanings
+    String textWithNamesAndMeanings = text.replaceAllMapped(regex, (match) {
+      String emoji = match.group(0)!;
+      String meaning = emojiMeanings[emoji] ?? "Unknown";
+      return "$emoji ($meaning)";
+    });
+
+    return textWithNamesAndMeanings;
+  }
+
+  Future<Map<String, String>> fetchEmojiMeaningsFromFirestore() async {
+    // Initialize Firestore
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // Fetch emoji meanings from Firestore collection
+    QuerySnapshot snapshot = await firestore.collection('emojis').get();
+    
+    // Convert snapshot to a Map of emoji -> meaning
+    Map<String, String> emojiMeanings = {};
+    snapshot.docs.forEach((doc) {
+      String emoji = doc.get('id'); // Emoji character itself
+      String meaning = doc.get('meanEn') ?? "Unknown"; // English meaning
+      emojiMeanings[emoji] = meaning;
+    });
+
+    return emojiMeanings;
+  }
+
   Future<void> sendPost(String text) async {
     // まずは user という変数にログイン中のユーザーデータを格納します
     final user = FirebaseAuth.instance.currentUser!;
@@ -63,17 +98,19 @@ class _ChatPageState extends State<ChatPage> {
     RegExp regex = RegExp(emojiPattern);
 
     // Replace emojis with their names
-    String textWithNames = text.replaceAllMapped(regex, (match) {
-      return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
-    });
+    // String textWithNames = text.replaceAllMapped(regex, (match) {
+    //   return match.group(0)!.codeUnits.map((unit) => '\\u{${unit.toRadixString(16)}}').join('');
+    // });
+    String textWithNamesAndMeanings = await replaceEmojisWithMeanings(text, regex);
+
     ////////////////
 
     final newPost = Post(
       // text: newText,
       // text: text,
-      text: textWithNames,
-      textEn: textWithNames, //とりあえず
-      textJa: textWithNames, //同様とりあえず
+      text: textWithNamesAndMeanings,
+      textEn: textWithNamesAndMeanings, //とりあえず
+      textJa: textWithNamesAndMeanings, //同様とりあえず
       createdAt: Timestamp.now(), // 投稿日時は現在とします
       posterName: posterName,
       posterImageUrl: posterImageUrl,

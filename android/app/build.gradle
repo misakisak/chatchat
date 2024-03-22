@@ -48,8 +48,10 @@ android {
         
         //下のやつ消したそしてその次のやつ足した。（教科書）
         // minSdkVersion flutter.minSdkVersion
-        minSdkVersion 19
-         
+        // minSdkVersion 19
+        //そしてerrorのために上のやつを次のやつに変えた
+        minSdkVersion 21
+
         //下のやつ足した。（教科書）
         multiDexEnabled true
         targetSdkVersion flutter.targetSdkVersion
