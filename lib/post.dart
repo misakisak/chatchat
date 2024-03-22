@@ -28,7 +28,7 @@ class Post {
                posterName: map['posterName'],
                posterImageUrl: map['posterImageUrl'],
                posterId: map['posterId'],
-               posterLocale: map['posterLocale'] ?? "en",
+               posterLocale: map['posterLocale'] ?? "en_US",
                reference: snapshot.reference, // 注意。reference は map ではなく snapshot に入っています。
           );
      }

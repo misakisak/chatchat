@@ -238,6 +238,7 @@ class _ChatPageState extends State<ChatPage> {
                   // 入力中の文字列を削除します。
                   controller.clear();
                 },
+                
 
               ), //child
             ), //Padding
@@ -337,7 +338,9 @@ class PostWidget extends StatelessWidget {
                     // [条件式] ? A : B の三項演算子を使っています。
                     color: FirebaseAuth.instance.currentUser!.uid == post.posterId ? Colors.amber[100] : Colors.blue[100],
                   ),
-                  child: Text(post.text),
+                  child: Text(Localizations.localeOf(context).languageCode == 'ja' ? 
+                  post.textJa    : 
+                  post.textEn,),  
                 ),
                 
                 if (FirebaseAuth.instance.currentUser!.uid == post.posterId)
