@@ -12,6 +12,10 @@ class MyPage extends StatelessWidget {
      // 何度も FirebaseAuth.instance.currentUser! と書くのは大変です。
      // そこで適当な変数名をつけた変数に一時的に値を格納して記述量を短くする場合があります。
      final user = FirebaseAuth.instance.currentUser!;
+     // final posterLocale = window.locale.toString();
+     final posterLocale = Localizations.localeOf(context).toString();
+
+
      return Scaffold(
           appBar: AppBar(title: Text(AppLocalizations.of(context).mypage)),
           body: Container(
@@ -44,6 +48,11 @@ class MyPage extends StatelessWidget {
                               alignment: Alignment.centerLeft,
                               // 登録日
                               child: Text('${AppLocalizations.of(context).registrationdate}：${user.metadata.creationTime!}'),
+                         ),
+                         Align(
+                              alignment: Alignment.centerLeft,
+                              // 登録日
+                              child: Text('Language：${posterLocale!}'),
                          ),
                          const SizedBox(height: 16),
                               ElevatedButton(
